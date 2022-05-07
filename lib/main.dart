@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.red,//color stepper
+        primarySwatch: Colors.red, //color stepper
       ),
       home: const MyHomePage(),
     );
@@ -30,12 +31,37 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _activeCurrentStep = 0;
+  bool isCompleted = false;
 
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
+  TextEditingController pass = TextEditingController().c;
   TextEditingController address = TextEditingController();
   TextEditingController pincode = TextEditingController();
+
+  Center buildComplete() {
+    return  Center(
+      child: Column(
+        children:  <Widget>[
+        const Text('Completed!!!'),
+        ElevatedButton(
+        onPressed:(() {
+          setState(() {
+              _activeCurrentStep = 0;
+              isCompleted = false;
+              name.clear();
+              email.clear();
+              pass.clear();
+              address.clear();
+              pincode.clear();
+          });
+        }), 
+        child: const Text('Reset'),
+        ),
+        ],
+      ),
+    );
+  }
 
 // Here we have created list of steps that
 // are required to complete the form
@@ -142,15 +168,24 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
       // Here we have initialized the stepper widget
-      body: Stepper(
+      body: 
+      isCompleted
+      ?  buildComplete()
+      : 
+      Stepper(
+        //https://api.flutter.dev/flutter/material/Stepper-class.html
         type: StepperType.horizontal,
         currentStep: _activeCurrentStep,
         steps: stepList(),
         onStepContinue: () {
           //Button Continue
           final isLastStep = _activeCurrentStep == stepList().length - 1;
-
+      
           if (isLastStep) {
+      
+            //alternatively we can set flag isCompleted to true
+            setState(() => isCompleted = true );
+      
             print('Competed');
             //send data to the server
           } else {
@@ -161,7 +196,9 @@ class _MyHomePageState extends State<MyHomePage> {
         onStepCancel: () {
           //Button Cancel
           //decrement
-         _activeCurrentStep > 0 ? setState((() => _activeCurrentStep -= 1)) : null;
+          _activeCurrentStep > 0
+              ? setState((() => _activeCurrentStep -= 1))
+              : null;
         },
         onStepTapped: (int index) {
           //Go to Step by index
@@ -171,19 +208,26 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         //Custom Buttons Next and Cancel
         controlsBuilder: (BuildContext context, ControlsDetails details) {
-        return Row(
-          children: <Widget>[
-            TextButton(
-              onPressed: details.onStepContinue,
-              child: const Text('NEXT'),
-            ),
-            TextButton(
-              onPressed: details.onStepCancel,
-              child: const Text('CANCEL'),
-            ),
-          ],
-        );
-      },
+          final isLastStep = _activeCurrentStep == stepList().length - 1;
+          return Row(
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: details.onStepContinue,
+                  child:  Text( isLastStep ? 'CONFIRM' : 'NEXT' ),
+                ),
+              ),
+              SizedBox(width: _activeCurrentStep != 0 ? 12 : 0),
+               if (_activeCurrentStep != 0)
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: details.onStepCancel,
+                    child: const Text('BACK'),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
