@@ -146,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         currentStep: _activeCurrentStep,
         steps: stepList(),
         onStepContinue: () {
+          //Button Continue
           if (_activeCurrentStep < (stepList().length - 1)) {
             setState(() {
               _activeCurrentStep += 1;
@@ -153,6 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         },
         onStepCancel: () {
+          //Button Cancel
           if (_activeCurrentStep == 0) {
             return;
           }
@@ -162,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
         onStepTapped: (int index) {
+          //Go to Step by index
           setState(() {
             _activeCurrentStep = index;
           });
