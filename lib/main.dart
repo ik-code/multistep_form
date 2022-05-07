@@ -80,10 +80,36 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        const Step(
-            title: Text('Address'),
-            content: Center(
-              child: Text('Address'),
+        Step(
+            state:
+                _activeCurrentStep <= 1 ? StepState.editing : StepState.complete,
+            isActive: _activeCurrentStep >= 1,
+            title: const Text('Address'),
+            content: Container(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextField(
+                    controller: address,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Full House Address',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextField(
+                    controller: pincode,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Pin Code',
+                    ),
+                  ),
+                ],
+              ),
             )),
         const Step(
             title: Text('Confirm'),
