@@ -111,11 +111,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             )),
-        const Step(
-            title: Text('Confirm'),
-            content: Center(
-              child: Text('Confirm'),
-            ))
+        Step(
+            state: StepState.complete,
+            isActive: _activeCurrentStep >= 2,
+            title: const Text('Confirm'),
+            content: Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('Name: ${name.text}'),
+                Text('Email: ${email.text}'),
+                Text('Password: ${pass.text}'),
+                Text('Address : ${address.text}'),
+                Text('PinCode : ${pincode.text}'),
+              ],
+            )))
       ];
   @override
   Widget build(BuildContext context) {
