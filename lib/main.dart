@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,//color stepper
       ),
       home: const MyHomePage(),
     );
@@ -81,8 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         Step(
-            state:
-                _activeCurrentStep <= 1 ? StepState.editing : StepState.complete,
+            state: _activeCurrentStep <= 1
+                ? StepState.editing
+                : StepState.complete,
             isActive: _activeCurrentStep >= 1,
             title: const Text('Address'),
             content: Container(
@@ -147,21 +148,20 @@ class _MyHomePageState extends State<MyHomePage> {
         steps: stepList(),
         onStepContinue: () {
           //Button Continue
-          if (_activeCurrentStep < (stepList().length - 1)) {
-            setState(() {
-              _activeCurrentStep += 1;
-            });
+          final isLastStep = _activeCurrentStep == stepList().length - 1;
+
+          if (isLastStep) {
+            print('Competed');
+            //send data to the server
+          } else {
+            //increment
+            setState((() => _activeCurrentStep += 1));
           }
         },
         onStepCancel: () {
           //Button Cancel
-          if (_activeCurrentStep == 0) {
-            return;
-          }
-
-          setState(() {
-            _activeCurrentStep -= 1;
-          });
+          //decrement
+         _activeCurrentStep > 0 ? setState((() => _activeCurrentStep -= 1)) : null;
         },
         onStepTapped: (int index) {
           //Go to Step by index
@@ -169,6 +169,21 @@ class _MyHomePageState extends State<MyHomePage> {
             _activeCurrentStep = index;
           });
         },
+        //Custom Buttons Next and Cancel
+        controlsBuilder: (BuildContext context, ControlsDetails details) {
+        return Row(
+          children: <Widget>[
+            TextButton(
+              onPressed: details.onStepContinue,
+              child: const Text('NEXT'),
+            ),
+            TextButton(
+              onPressed: details.onStepCancel,
+              child: const Text('CANCEL'),
+            ),
+          ],
+        );
+      },
       ),
     );
   }
